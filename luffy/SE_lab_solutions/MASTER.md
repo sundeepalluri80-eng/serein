@@ -513,3 +513,27 @@ This guide consolidates recurring patterns from:
 - [Dated SET-1 solutions](17-11-26/SET-1-SOLUTIONS.md) through [Dated SET-8 solutions](17-11-26/SET-8-SOLUTIONS.md)
 
 Use individual solution files for exact scenario wording, application names, repository URLs, marks and paper-specific configuration. This master file focuses on reusable patterns and viva logic.
+
+
+## 17. Lab login and credential handling
+
+> **Security rule:** Never commit real passwords, cloud-console passwords, API keys, SSH private keys or tokens to this repository. Use placeholders in lab notes and store actual secrets in a password manager or the relevant platform's secret store.
+
+### Jenkins
+- Example administrator username for the lab: `admin`.
+- Set a unique strong password during setup; do not use a shared/default password such as `root`.
+- If the lab instance currently uses a weak password, change it before exposing Jenkins to a network.
+- For pipeline integrations, store GitHub/Docker Hub credentials in **Jenkins → Manage Jenkins → Credentials** and reference the credential ID. Do not place secrets in a Jenkinsfile.
+
+### Nagios
+- Do not assume a universal default username/password. It depends on the Nagios image, package and lab configuration.
+- Check the exact image's README, container environment variables or the lab handout for the configured web-login account.
+- Change any documented default password before exposing the dashboard beyond localhost/private lab network.
+
+### AWS
+- Sign in with the AWS account/IAM identity assigned to the lab. Use the organisation's approved sign-in method; do not store the account password in this repository.
+- Prefer an IAM user/role with least privilege and MFA rather than sharing root-account credentials.
+- For EC2 access, use a protected SSH key pair or Systems Manager Session Manager; never commit the private key.
+- Keep AWS access keys in a secure credential store and rotate any key that may have been exposed.
+
+**If a password or token was accidentally shared or committed:** change/revoke it immediately, review sign-in/activity logs, enable MFA, and remove it from the repository history if it was committed. Deleting it from the latest file alone does not make an exposed secret safe.
